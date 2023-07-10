@@ -16,9 +16,7 @@ const toCssString = (key, prop) => (
   + ":" + prop + ";"
 );
 
-/**
- * @param {Reg[0]} reg 
- */
+/** @param {Reg[0]} reg */
 const createHtml = (reg) => {
   let html = "";
   for (let cl in reg) {
@@ -30,6 +28,28 @@ const createHtml = (reg) => {
     }
   }
   return html;
+}
+
+/** 
+ * @param {Reg[0]} reg 
+ * @param {number} id
+ */
+const createElement = (reg, id) => {
+  try {
+    const styleElem = document.createElement("style");
+    styleElem.id = id.toString(16);
+    styleElem.innerHTML = createHtml(reg);
+    document.head.append(styleElem);
+  } catch {}
+}
+
+/** @param {number} id */
+const elementExists = (id) => {
+  try {
+    return !!document.head.getElementById(id.toString(16));
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -78,6 +98,10 @@ export const classname = (...props) => props.map(props => {
 
   if (!(id in REG)) {
     REG[id] = createReg(props, className);
+  }
+
+  if (!elementExists(id)) {
+    createElement(REG[id], id);
   }
 
   return className;
