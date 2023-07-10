@@ -8,13 +8,13 @@
 <td>
 
 <img width=322/>
-javascript
+js
 
 </td>
 <td>
 
 <img width=322/>
-created css
+css
 
 </td>
 </tr>
