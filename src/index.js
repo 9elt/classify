@@ -7,26 +7,6 @@ import hash from "f-hash"
 const REG = {};
 
 /**
- * @param {CSSProps} p 
- * @returns {CSSProps}
- */
-const explicitUnits = (p) => {
-  let props = {};
-  for (let k in p) {
-    if (typeof p[k] === "string") {
-      props[k] = p[k].trim();
-    }
-    else if (typeof p[k] === "number") {
-      props[k] = p[k] > 1 ? p[k] + "px" : p[k] + "";
-    }
-    else if (typeof p[k] === "object") {
-      props[k] = explicitUnits(p[k]);
-    }
-  }
-  return props;
-}
-
-/**
  * @param {string} key 
  * @param {string} prop 
  * @returns {string}
@@ -60,7 +40,13 @@ const createReg = (props, id) => {
 
   for (let k in props) {
     if (typeof props[k] === "string") {
-      res[id] += toCssString(k, props[k]);
+      res[id] += toCssString(k, props[k].trim());
+    }
+    if (typeof props[k] === "number") {
+      res[id] += toCssString(k, props[k] > 1
+        ? props[k] + "px"
+        : props[k] + ""
+      );
     }
     else if (typeof props[k] === "object") {
       if (k.charAt(0) == "&") {
@@ -87,14 +73,12 @@ const createReg = (props, id) => {
  * @returns {string}
  */
 export const style = (...props) => props.map(props => {
-  props = explicitUnits(props);
-
   const id = hash(props);
   const className = "lor-" + id.toString(36);
 
-  if (id in REG) { return className; }
-
-  REG[id] = createReg(props, className);
+  if (!(id in REG)) {
+    REG[id] = createReg(props, className);
+  }
 
   return className;
 }).join(" ");

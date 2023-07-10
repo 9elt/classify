@@ -4,6 +4,8 @@
     "f-hash": "^1.0.0"
   },
   "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc",
     "benchmark": "node ./benchmark/index.jsbm.js"
   }
 }
