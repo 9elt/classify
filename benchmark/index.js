@@ -1,8 +1,8 @@
-import { classname } from "../dist/index.js";
+import styleClass from "../dist/index.js";
 
-//@jsbm {classname}
+//@jsbm {style class}
 
-classname({
+styleClass({
   width: 30,
   "@media (max-width: 300px)": {
     width: 500

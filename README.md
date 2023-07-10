@@ -1,4 +1,4 @@
-# classname
+# style class
 
 ### example
 
@@ -23,7 +23,9 @@ css
 <td>
 
 ```javascript
-const className = classname({
+import styleClass from "style-class";
+
+const className = styleClass({
   width: 30,
   "@media (max-width: 300px)": {
     width: 500

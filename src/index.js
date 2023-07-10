@@ -35,21 +35,16 @@ const createHtml = (reg) => {
  * @param {number} id
  */
 const createElement = (reg, id) => {
-  try {
-    const styleElem = document.createElement("style");
-    styleElem.id = id.toString(16);
-    styleElem.innerHTML = createHtml(reg);
-    document.head.append(styleElem);
-  } catch {}
+  const styleElem = document.createElement("style");
+  styleElem.id = id.toString(16);
+  styleElem.innerHTML = createHtml(reg);
+  document.head.append(styleElem);
 }
 
 /** @param {number} id */
 const elementExists = (id) => {
-  try {
-    return !!document.head.getElementById(id.toString(16));
-  } catch {
-    return false;
-  }
+  if (typeof document === "undefined") { return true; }
+  return !!document.head.getElementById(id.toString(16));
 }
 
 /**
@@ -92,7 +87,7 @@ const createReg = (props, id) => {
  * @param  {...CSSProps} props 
  * @returns {string}
  */
-export const classname = (...props) => props.map(props => {
+const styleClass = (...props) => props.map(props => {
   const id = hash(props);
   const className = "lor-" + id.toString(36);
 
@@ -106,3 +101,5 @@ export const classname = (...props) => props.map(props => {
 
   return className;
 }).join(" ");
+
+export default styleClass;
