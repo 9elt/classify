@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "dependencies": {
+    "f-hash": "^1.0.0"
+  },
+  "scripts": {
+    "benchmark": "node ./benchmark/index.jsbm.js"
+  }
+}
