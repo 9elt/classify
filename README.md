@@ -23,7 +23,7 @@ css
 <td>
 
 ```javascript
-const className = style({
+const className = classname({
   width: 30,
   "@media (max-width: 300px)": {
     width: 500

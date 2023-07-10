@@ -50,14 +50,14 @@ console.log(_jsbm_ansi(name, 'blue') + ' | ' + _jsbm_fmt_res(res))
 } else {
 console.log(_jsbm_ansi(name, 'red') + ' |\n', res)
 }};
-import { style } from "../dist/index.js";
+import { classname } from "../dist/index.js";
 try {
 const _results = Array(1000);
 for (let _sample = 0; _sample < 1000; _sample++) {
 let _iteration = 1000;
 const _start = performance.now();
 while (_iteration--) {
-style({
+classname({
   width: 30,
   "@media (max-width: 300px)": {
     width: 500
@@ -78,9 +78,9 @@ style({
 };
 _results[_sample] = performance.now() - _start;
 }
-_jsbm_log('style', _jsbm_snd(_results));
+_jsbm_log('classname', _jsbm_snd(_results));
 } catch (error) {
-_jsbm_log('style', error);
+_jsbm_log('classname', error);
 };
 try {
 const _results = Array(1000);

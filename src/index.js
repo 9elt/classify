@@ -72,7 +72,7 @@ const createReg = (props, id) => {
  * @param  {...CSSProps} props 
  * @returns {string}
  */
-export const style = (...props) => props.map(props => {
+export const classname = (...props) => props.map(props => {
   const id = hash(props);
   const className = "lor-" + id.toString(36);
 
