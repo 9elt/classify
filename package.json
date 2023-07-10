@@ -7,6 +7,6 @@
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc",
-    "benchmark": "node ./benchmark/index.jsbm.js"
+    "benchmark": "npm run build && node ./benchmark/index.jsbm.js"
   }
 }
