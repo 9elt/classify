@@ -26,7 +26,7 @@
   "homepage": "https://github.com/9elt/classify#readme",
   "repository": "github:9elt/classify",
   "dependencies": {
-    "f-hash": "^1.0.0"
+    "@9elt/hash": "^1.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.14",

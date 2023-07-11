@@ -5,7 +5,7 @@
  * @typedef {{ [key: string]: string | CSSObject }} CSSObject
  */
 
-import hash from "f-hash";
+import hash from "@9elt/hash";
 import { useEffect, useState } from "react";
 
 /** @type {{ [key: number]: HTMLStyleElement }} */
