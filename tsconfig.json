@@ -10,5 +10,6 @@
     "declaration": true,
     "moduleResolution": "Node16",
     "skipLibCheck": true,
+    "removeComments": true,
   }
 }

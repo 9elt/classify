@@ -8,13 +8,13 @@
 <td>
 
 <img width=322/>
-js
+react
 
 </td>
 <td>
 
 <img width=322/>
-css
+the generated css
 
 </td>
 </tr>
@@ -23,26 +23,30 @@ css
 <td>
 
 ```javascript
-import styleClass from "style-class";
+import useSc from "react-style-class";
 
-const className = styleClass({
-  width: 30,
-  "@media (max-width: 300px)": {
-    width: 500
-  },
-  ":hover": {
-    width: "600px"
-  },
-  "& > div": {
-    width: "auto",
-    "@media (max-width: 500px)": {
-      width: "calc(100% - 10rem)"
+export const Component = () => {
+  const className = useSc({
+    width: 30,
+    "@media (max-width: 300px)": {
+      width: 500
     },
-    "& > span": {
-      opacity: 0.5
+    ":hover": {
+      width: "600px"
+    },
+    "& > div": {
+      width: "auto",
+      "@media (max-width: 500px)": {
+        width: "calc(100% - 10rem)"
+      },
+      "& > span": {
+        opacity: 0.5
+      }
     }
-  }
-}); // lor-w6t8m2
+  }); // lor-w6t8m2
+
+  return <div className={className}></div>
+}
 ```
 
 </td>

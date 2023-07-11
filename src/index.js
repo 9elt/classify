@@ -1,14 +1,41 @@
+/** 
+ * @typedef {Partial<import('react').CSSProperties>} CSSProperties
+ * @typedef {{ [key: string]: CSSProperties }} NestedCSSProperties
+ * @typedef {CSSProperties| NestedCSSProperties} CSSProps
+ * @typedef {{ [key: number]: { [key: string]: string | RegisteredProps } }} RegisteredProps
+ */
+
 import hash from "f-hash";
 import { useEffect, useState } from "react";
-
-/** @typedef {{ [key: string]: number | string | CSSProps }} CSSProps */
-/** @typedef {{ [key: number]: { [key: string]: string | Reg } }} Reg */
 
 /** @type {{ [key: number]: string }} */
 const REG = {};
 
 /** @type {{ [key: number]: HTMLStyleElement }} */
 const ELREG = {};
+
+/** @type {{ [key: number]: { elem: HTMLStyleElement, life: number } }} */
+const GCREG = {};
+
+/** @param {number} id */
+const scheduleGC = (id) => { GCREG[id] = { elem: ELREG[id], life: 2 } }
+
+const GC = () => {
+  for (let id in GCREG) {
+    if (GCREG[id].life === 0) {
+      if (countRef(id) === 0) {
+        GCREG[id].elem.remove();
+        delete ELREG[id];
+        delete REG[id];
+      }
+
+      delete GCREG[id];
+    }
+    else {
+      GCREG[id].life--;
+    }
+  }
+}
 
 /**
  * @param {string} key 
@@ -20,7 +47,7 @@ const toCssString = (key, prop) => (
   + ":" + prop + ";"
 );
 
-/** @param {Reg[0]} reg */
+/** @param {RegisteredProps[0]} reg */
 const createHtml = (reg) => {
   let html = "";
   for (let cl in reg) {
@@ -37,23 +64,26 @@ const createHtml = (reg) => {
 const documentExists = () => typeof document !== "undefined";
 
 /** @param {number} id */
-const elementId = (id) => "lor-id-" + id.toString(16);
+const elementId = (id) => id.toString(16);
+
+/** @param {number} id */
+const classNameId = (id) => "lor-" + id.toString(36);
 
 /** 
- * @param {Reg[0]} reg 
+ * @param {RegisteredProps[0]} reg 
  * @param {number} id
  */
 const createElement = (reg, id) => {
-  const styleElem = document.createElement("style");
-  styleElem.id = elementId(id);
-  styleElem.innerHTML = createHtml(reg);
-  styleElem.dataset.refs = 1;
-  document.head.append(styleElem);
-  ELREG[id] = styleElem;
+  const style = document.createElement("style");
+  style.dataset.lor = elementId(id);
+  style.dataset.refs = 1;
+  style.innerHTML = createHtml(reg);
+  document.head.append(style);
+  ELREG[id] = style;
 }
 
 /** @param {number} id */
-const removeElement = (id) => ELREG[id].remove();
+const countRef = (id) => parseInt(ELREG[id].dataset.refs);
 
 /** @param {number} id */
 const addRef = (id) => ELREG[id].dataset.refs++;
@@ -63,7 +93,7 @@ const removeRef = (id) => parseInt(--ELREG[id].dataset.refs);
 
 /** @param {number} id */
 const elementExists = (id) => {
-  let el = document.head.getElementById(elementId(id));
+  let el = document?.head.querySelector(`[data-lor="${elementId(id)}"]`);
 
   if (!!el) {
     if (!ELREG[id]) { ELREG[id] = el; }
@@ -102,7 +132,7 @@ const createReg = (props, id) => {
       else if (k.charAt(0) == ":") {
         res[id + k] = createReg(props[k], "_")["_"];
       }
-      else if (k.charAt(0) == "@") {
+      else if (k.substring(0, 6) == "@media") {
         res[k] = createReg(props[k], id);
       }
     }
@@ -115,17 +145,18 @@ const createReg = (props, id) => {
  * @param  {CSSProps} props 
  * @returns {string}
  */
-export default function useStyleClass(props) {
-  const id = hash(props);
-  const [className, setClassName] = useState("lor-" + id.toString(36));
+function useStyleClass(props) {
+  const [className, setClassName] = useState(classNameId(hash(props)));
 
   useEffect(() => {
-    if (!documentExists()) { return }
+    if (!documentExists()) { return; }
+
+    GC();
 
     const id = hash(props);
-    const className = "lor-" + id.toString(36);
+    const className = classNameId(id);
 
-    if (!(id in REG)) {
+    if (!REG[id]) {
       REG[id] = createReg(props, className);
     }
 
@@ -138,12 +169,24 @@ export default function useStyleClass(props) {
     setClassName(() => className);
 
     return () => {
-      if (documentExists() && elementExists(id)) {
-        if (removeRef(id) == 0) { removeElement(id); }
+      if (
+        documentExists()
+        && elementExists(id)
+        && removeRef(id) === 0
+      ) {
+        scheduleGC(id);
       }
     }
 
   }, [props]);
 
   return className;
+}
+
+/**
+ * @param  {...CSSProps} props 
+ * @returns {string}
+ */
+export default function useSc(...props) {
+  return props.map(props => useStyleClass(props)).join(" ");
 }

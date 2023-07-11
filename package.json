@@ -1,6 +1,7 @@
 {
-  "name": "style-class",
-  "type": "module",
+  "name": "react-style-class",
+  "version": "1.0.0",
+  "description": "create classes from style",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
