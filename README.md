@@ -25,7 +25,7 @@ export default function App() {
 }
 ```
 
-html result
+The html result
 
 ```html
 <head>
