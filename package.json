@@ -1,7 +1,7 @@
 {
-  "name": "react-style-class",
+  "name": "style-classify",
   "version": "1.0.0",
-  "description": "create classes from style",
+  "description": "A React library to create css styles from javascript style objects",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -20,7 +20,6 @@
   },
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc",
-    "benchmark": "npm run build && node ./benchmark/index.jsbm.js"
+    "build": "tsc"
   }
 }

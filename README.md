@@ -1,90 +1,57 @@
-# style class
+# style classify
 
-### example
+A React library to create css styles from javascript style objects, with support for pseudo-classes, media queries and selectors.
 
-<table>
-
-<tr>
-<td>
-
-<img width=342/>
-react
-
-</td>
-<td>
-
-<img width=342/>
-css
-
-</td>
-</tr>
-
-<tr>
-<td>
+### basic example
 
 ```javascript
-import useSc from "react-style-class";
+import useClassify from "style-classify";
 
-export const Component = () => {
-  const className = useSc({
-    width: 30,
-    "@media (max-width: 300px)": {
-      width: 500
-    },
-    ":hover": {
-      width: "600px"
-    },
-    "& > div": {
-      width: "auto",
-      "@media (max-width: 500px)": {
-        width: "calc(100% - 10rem)"
-      },
-      "& > span": {
-        opacity: 0.5
+export default function App() {
+
+  const className = useClassify({
+    width: 300,
+    height: 180,
+    ":hover": { height: 200 },
+    "&>p": { textTransform: "uppercase" },
+    "@media (max-width: 300px)": { width: 200 },
+  });
+
+  return (
+    <div className={className}>
+      <p>my app</p>
+    </div>
+  )
+}
+```
+
+```html
+<head>
+  [...head content]
+  <style data-lor="f48e1bb" data-refs="1">
+    .lor-48oa7v {
+      width: 300px;
+      height: 180px;
+    }
+    .lor-48oa7v:hover {
+      height: 200px;
+    }
+    .lor-48oa7v>p {
+      text-transform: uppercase;
+    }
+    @media (max-width: 300px) {
+      .lor-48oa7v {
+        width: 200px;
       }
     }
-  }); // lor-w6t8m2
+  </style>
+</head>
 
-  return <div className={className}></div>
-}
+<body>
+  <div id="root">
+    <div class="lor-48oa7v">
+      <p>my app</p>
+    </div>
+  </div>
+</body>
 ```
-
-</td>
-
-<td>
-
-```css
-.lor-w6t8m2 {
-  width: 30px;
-}
-
-@media (max-width: 300px) {
-  .lor-w6t8m2 {
-    width: 500px;
-  }
-}
-
-.lor-w6t8m2:hover {
-  width: 600px;
-}
-
-.lor-w6t8m2>div {
-  width: auto;
-}
-
-@media (max-width: 500px) {
-  .lor-w6t8m2>div {
-    width: calc(100% - 10rem);
-  }
-}
-
-.lor-w6t8m2>div>span {
-  opacity: 0.5;
-}
-```
-
-</td>
-</tr>
-
-
-</table>

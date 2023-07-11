@@ -150,7 +150,7 @@ const createReg = (props, id) => {
  * @param  {CSSProps} props 
  * @returns {string}
  */
-function useStyleClass(props) {
+function useClassifyProps(props) {
   const [className, setClassName] = useState(classNameId(hash(props)));
 
   useEffect(() => {
@@ -192,6 +192,6 @@ function useStyleClass(props) {
  * @param  {...CSSProps} props 
  * @returns {string}
  */
-export default function useSc(...props) {
-  return props.map(props => useStyleClass(props)).join(" ");
+export default function useClassify(...props) {
+  return props.map(props => useClassifyProps(props)).join(" ");
 }
