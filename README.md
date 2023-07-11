@@ -14,7 +14,7 @@ react
 <td>
 
 <img width=322/>
-the generated css
+css
 
 </td>
 </tr>
