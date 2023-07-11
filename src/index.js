@@ -1,39 +1,36 @@
 /** 
  * @typedef {Partial<import('react').CSSProperties>} CSSProperties
  * @typedef {{ [key: string]: CSSProperties }} NestedCSSProperties
- * @typedef {CSSProperties| NestedCSSProperties} CSSProps
- * @typedef {{ [key: number]: { [key: string]: string | RegisteredProps } }} RegisteredProps
+ * @typedef {CSSProperties| NestedCSSProperties} ClassifyProps
+ * @typedef {{ [key: string]: string | CSSObject }} CSSObject
  */
 
 import hash from "f-hash";
 import { useEffect, useState } from "react";
 
-/** @type {{ [key: number]: string }} */
-const REG = {};
-
 /** @type {{ [key: number]: HTMLStyleElement }} */
-const ELREG = {};
+const EL_REG = {};
 
 /** @type {{ [key: number]: { elem: HTMLStyleElement, life: number } }} */
-const GCREG = {};
+const GC_REG = {};
 
 /** @param {number} id */
-const scheduleGC = (id) => { GCREG[id] = { elem: ELREG[id], life: 2 } }
+const scheduleGC = (id) => { GC_REG[id] = { elem: EL_REG[id], life: 2 } }
 
 const GC = () => {
-  for (let id in GCREG) {
-    if (GCREG[id].life === 0) {
-      if (countRef(id) === 0) {
-        GCREG[id].elem.remove();
-        delete ELREG[id];
-        delete REG[id];
-      }
+  for (let id in GC_REG) {
 
-      delete GCREG[id];
+    if (GC_REG[id].life > 0) {
+      GC_REG[id].life--;
+      continue;
     }
-    else {
-      GCREG[id].life--;
+
+    if (countRef(id) === 0) {
+      GC_REG[id].elem.remove();
+      delete EL_REG[id];
     }
+
+    delete GC_REG[id];
   }
 }
 
@@ -46,15 +43,15 @@ const toCssString = (key, prop) => (
   key.replaceAll(/[A-Z]/g, m => "-" + m.toLowerCase()) + ":" + prop + ";"
 );
 
-/** @param {RegisteredProps[0]} reg */
-const createHtml = (reg) => {
+/** @param {CSSObject} cssObject */
+const createHtml = (cssObject) => {
   let html = "";
-  for (let cl in reg) {
-    if (typeof reg[cl] === "string") {
-      html += "." + cl + "{" + reg[cl] + "}";
+  for (let cl in cssObject) {
+    if (typeof cssObject[cl] === "string") {
+      html += "." + cl + "{" + cssObject[cl] + "}";
     }
-    else if (typeof reg[cl] === "object") {
-      html += cl + "{" + createHtml(reg[cl]) + "}";
+    else if (typeof cssObject[cl] === "object") {
+      html += cl + "{" + createHtml(cssObject[cl]) + "}";
     }
   }
   return html;
@@ -69,45 +66,46 @@ const elementId = (id) => id.toString(16);
 const classNameId = (id) => "classify-" + id.toString(36);
 
 /** 
- * @param {RegisteredProps[0]} reg 
+ * @param {CSSObject} cssObject 
  * @param {number} id
  */
-const createElement = (reg, id) => {
+const createElement = (cssObject, id) => {
   const style = document.createElement("style");
   style.dataset.classify = elementId(id);
   style.dataset.refs = 1;
-  style.innerHTML = createHtml(reg);
+  style.innerHTML = createHtml(cssObject);
   document.head.append(style);
-  ELREG[id] = style;
+  EL_REG[id] = style;
 }
-
-/** @param {number} id */
-const countRef = (id) => parseInt(ELREG[id].dataset.refs);
-
-/** @param {number} id */
-const addRef = (id) => ELREG[id].dataset.refs++;
-
-/** @param {number} id */
-const removeRef = (id) => parseInt(--ELREG[id].dataset.refs);
 
 /** @param {number} id */
 const elementExists = (id) => {
   let el = document?.head.querySelector(`[data-classify="${elementId(id)}"]`);
 
-  if (!!el) {
-    if (!ELREG[id]) { ELREG[id] = el; }
-    return true;
-  }
-  else {
-    if (ELREG[id]) { ELREG[id] = undefined; }
+  if (!el) {
+    if (EL_REG[id]) { delete EL_REG[id]; }
+    if (GC_REG[id]) { delete GC_REG[id]; }
+
     return false;
   }
+
+  return true;
 }
 
+/** @param {number} id */
+const countRef = (id) => parseInt(EL_REG[id].dataset.refs);
+
+/** @param {number} id */
+const addRef = (id) => EL_REG[id].dataset.refs++;
+
+/** @param {number} id */
+const removeRef = (id) => parseInt(--EL_REG[id].dataset.refs);
+
 /**
- * @param {CSSProps} props 
+ * @param {CSSProps} props
+ * @returns {CSSObject}
  */
-const createReg = (props, id) => {
+const createCssObject = (props, id) => {
   const res = { [id]: "" };
 
   for (let k in props) {
@@ -123,18 +121,18 @@ const createReg = (props, id) => {
       switch (k.charAt(0)) {
         case "&": {
           const sub_id = k.replace("&", id);
-          const sub_res = createReg(props[k], sub_id);
+          const sub_res = createCssObject(props[k], sub_id);
           for (let sub_k in sub_res) {
             res[sub_k] = sub_res[sub_k];
           }
           break;
         }
         case ":": {
-          res[id + k] = createReg(props[k], "_")["_"];
+          res[id + k] = createCssObject(props[k], "_")["_"];
           break;
         }
         case "@": {
-          res[k] = createReg(props[k], id);
+          res[k] = createCssObject(props[k], id);
           break;
         }
       }
@@ -145,10 +143,10 @@ const createReg = (props, id) => {
 }
 
 /**
- * @param  {CSSProps} props 
+ * @param  {ClassifyProps} props 
  * @returns {string}
  */
-function useClassifyProps(props) {
+const useClassifyProps = (props) => {
   const [className, setClassName] = useState(classNameId(hash(props)));
 
   useEffect(() => {
@@ -159,14 +157,10 @@ function useClassifyProps(props) {
     const id = hash(props);
     const className = classNameId(id);
 
-    if (!REG[id]) {
-      REG[id] = createReg(props, className);
-    }
-
     if (elementExists(id)) {
       addRef(id);
     } else {
-      createElement(REG[id], id);
+      createElement(createCssObject(props, className), id);
     }
 
     setClassName(() => className);
@@ -187,7 +181,7 @@ function useClassifyProps(props) {
 }
 
 /**
- * @param  {...CSSProps} props 
+ * @param  {...ClassifyProps} props 
  * @returns {string}
  */
 export default function useClassify(...props) {
