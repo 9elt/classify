@@ -2,7 +2,7 @@
   "name": "style-classify",
   "type": "commonjs",
   "version": "1.0.0",
-  "description": "A React library to create css styles from javascript style objects",
+  "description": "A lightweight React library to create css styles from javascript style objects",
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/index.d.ts",
   "exports": {
@@ -19,6 +19,7 @@
   "license": "MIT",
   "keywords": [
     "css-style",
+    "javascript-style",
     "react"
   ],
   "readme": "./README.md",
@@ -28,11 +29,11 @@
     "f-hash": "^1.0.0"
   },
   "devDependencies": {
-    "@types/react": "^18.0.22",
-    "@types/react-dom": "^18.0.7"
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6"
   },
   "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
+    "react": ">=16.8",
+    "react-dom": ">=16.8"
   }
 }

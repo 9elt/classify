@@ -43,8 +43,7 @@ const GC = () => {
  * @returns {string}
  */
 const toCssString = (key, prop) => (
-  key.replaceAll(/[A-Z]/g, m => "-" + m.toLowerCase())
-  + ":" + prop + ";"
+  key.replaceAll(/[A-Z]/g, m => "-" + m.toLowerCase()) + ":" + prop + ";"
 );
 
 /** @param {RegisteredProps[0]} reg */
@@ -67,7 +66,7 @@ const documentExists = () => typeof document !== "undefined";
 const elementId = (id) => id.toString(16);
 
 /** @param {number} id */
-const classNameId = (id) => "lor-" + id.toString(36);
+const classNameId = (id) => "classify-" + id.toString(36);
 
 /** 
  * @param {RegisteredProps[0]} reg 
@@ -75,7 +74,7 @@ const classNameId = (id) => "lor-" + id.toString(36);
  */
 const createElement = (reg, id) => {
   const style = document.createElement("style");
-  style.dataset.lor = elementId(id);
+  style.dataset.classify = elementId(id);
   style.dataset.refs = 1;
   style.innerHTML = createHtml(reg);
   document.head.append(style);
@@ -93,7 +92,7 @@ const removeRef = (id) => parseInt(--ELREG[id].dataset.refs);
 
 /** @param {number} id */
 const elementExists = (id) => {
-  let el = document?.head.querySelector(`[data-lor="${elementId(id)}"]`);
+  let el = document?.head.querySelector(`[data-classify="${elementId(id)}"]`);
 
   if (!!el) {
     if (!ELREG[id]) { ELREG[id] = el; }
@@ -117,8 +116,7 @@ const createReg = (props, id) => {
     }
     if (typeof props[k] === "number") {
       res[id] += toCssString(k, props[k] > 1
-        ? props[k] + "px"
-        : props[k] + ""
+        ? props[k] + "px" : props[k] + ""
       );
     }
     else if (typeof props[k] === "object") {

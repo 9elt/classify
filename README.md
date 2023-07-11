@@ -1,8 +1,8 @@
 # style classify
 
-A React library to create css styles from javascript style objects, with support for pseudo-classes, media queries and selectors.
+A lightweight React library to create css styles from javascript style objects, with support for pseudo-classes, media queries and selectors.
 
-### basic example
+## basic example
 
 ```javascript
 import useClassify from "style-classify";
@@ -30,19 +30,19 @@ html result
 ```html
 <head>
   [...head content]
-  <style data-lor="f48e1bb" data-refs="1">
-    .lor-48oa7v {
+  <style data-classify="f48e1bb" data-refs="1">
+    .classify-48oa7v {
       width: 300px;
       height: 180px;
     }
-    .lor-48oa7v:hover {
+    .classify-48oa7v:hover {
       height: 200px;
     }
-    .lor-48oa7v>p {
+    .classify-48oa7v>p {
       text-transform: uppercase;
     }
     @media (max-width: 300px) {
-      .lor-48oa7v {
+      .classify-48oa7v {
         width: 200px;
       }
     }
@@ -51,7 +51,7 @@ html result
 
 <body>
   <div id="root">
-    <div class="lor-48oa7v">
+    <div class="classify-48oa7v">
       <p>my app</p>
     </div>
   </div>
