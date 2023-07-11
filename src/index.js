@@ -1,6 +1,6 @@
 /** 
  * @typedef {Partial<import('react').CSSProperties>} CSSProperties
- * @typedef {{ [key: string]: CSSProperties }} NestedCSSProperties
+ * @typedef {{ [key: string]: CSSProperties | NestedCSSProperties }} NestedCSSProperties
  * @typedef {CSSProperties| NestedCSSProperties} ClassifyProps
  * @typedef {{ [key: string]: string | CSSObject }} CSSObject
  */
