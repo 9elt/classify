@@ -7,13 +7,13 @@
 <tr>
 <td>
 
-<img width=322/>
+<img width=342/>
 react
 
 </td>
 <td>
 
-<img width=322/>
+<img width=342/>
 css
 
 </td>

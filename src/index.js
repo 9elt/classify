@@ -133,9 +133,11 @@ const createReg = (props, id) => {
         }
         case ":": {
           res[id + k] = createReg(props[k], "_")["_"];
+          break;
         }
         case "@": {
           res[k] = createReg(props[k], id);
+          break;
         }
       }
     }
