@@ -1,10 +1,14 @@
-import hash from "f-hash"
+import hash from "f-hash";
+import { useEffect, useState } from "react";
 
 /** @typedef {{ [key: string]: number | string | CSSProps }} CSSProps */
 /** @typedef {{ [key: number]: { [key: string]: string | Reg } }} Reg */
 
 /** @type {{ [key: number]: string }} */
 const REG = {};
+
+/** @type {{ [key: number]: HTMLStyleElement }} */
+const ELREG = {};
 
 /**
  * @param {string} key 
@@ -30,21 +34,45 @@ const createHtml = (reg) => {
   return html;
 }
 
+const documentExists = () => typeof document !== "undefined";
+
+/** @param {number} id */
+const elementId = (id) => "lor-id-" + id.toString(16);
+
 /** 
  * @param {Reg[0]} reg 
  * @param {number} id
  */
 const createElement = (reg, id) => {
   const styleElem = document.createElement("style");
-  styleElem.id = id.toString(16);
+  styleElem.id = elementId(id);
   styleElem.innerHTML = createHtml(reg);
+  styleElem.dataset.refs = 1;
   document.head.append(styleElem);
+  ELREG[id] = styleElem;
 }
 
 /** @param {number} id */
+const removeElement = (id) => ELREG[id].remove();
+
+/** @param {number} id */
+const addRef = (id) => ELREG[id].dataset.refs++;
+
+/** @param {number} id */
+const removeRef = (id) => parseInt(--ELREG[id].dataset.refs);
+
+/** @param {number} id */
 const elementExists = (id) => {
-  if (typeof document === "undefined") { return true; }
-  return !!document.head.getElementById(id.toString(16));
+  let el = document.head.getElementById(elementId(id));
+
+  if (!!el) {
+    if (!ELREG[id]) { ELREG[id] = el; }
+    return true;
+  }
+  else {
+    if (ELREG[id]) { ELREG[id] = undefined; }
+    return false;
+  }
 }
 
 /**
@@ -84,22 +112,38 @@ const createReg = (props, id) => {
 }
 
 /**
- * @param  {...CSSProps} props 
+ * @param  {CSSProps} props 
  * @returns {string}
  */
-const styleClass = (...props) => props.map(props => {
+export default function useStyleClass(props) {
   const id = hash(props);
-  const className = "lor-" + id.toString(36);
+  const [className, setClassName] = useState("lor-" + id.toString(36));
 
-  if (!(id in REG)) {
-    REG[id] = createReg(props, className);
-  }
+  useEffect(() => {
+    if (!documentExists()) { return }
 
-  if (!elementExists(id)) {
-    createElement(REG[id], id);
-  }
+    const id = hash(props);
+    const className = "lor-" + id.toString(36);
+
+    if (!(id in REG)) {
+      REG[id] = createReg(props, className);
+    }
+
+    if (elementExists(id)) {
+      addRef(id);
+    } else {
+      createElement(REG[id], id);
+    }
+
+    setClassName(() => className);
+
+    return () => {
+      if (documentExists() && elementExists(id)) {
+        if (removeRef(id) == 0) { removeElement(id); }
+      }
+    }
+
+  }, [props]);
 
   return className;
-}).join(" ");
-
-export default styleClass;
+}
