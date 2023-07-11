@@ -1,8 +1,8 @@
 {
-  "name": "style-classify",
+  "name": "@9elt/classify",
   "type": "commonjs",
   "version": "1.0.0",
-  "description": "A lightweight React library to create css styles from javascript style objects",
+  "description": "A lightweight React library to create css styles from javascript style objects, with support for pseudo-classes, media queries and selectors",
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/index.d.ts",
   "exports": {

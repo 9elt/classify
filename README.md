@@ -1,11 +1,11 @@
-# style classify
+# Classify
 
 A lightweight React library to create css styles from javascript style objects, with support for pseudo-classes, media queries and selectors.
 
 ## basic example
 
 ```javascript
-import useClassify from "style-classify";
+import useClassify from "@9elt/classify";
 
 export default function App() {
 
