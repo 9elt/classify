@@ -23,8 +23,8 @@
     "react"
   ],
   "readme": "./README.md",
-  "homepage": "https://github.com/9elt/style-classify#readme",
-  "repository": "github:9elt/style-classify",
+  "homepage": "https://github.com/9elt/classify#readme",
+  "repository": "github:9elt/classify",
   "dependencies": {
     "f-hash": "^1.0.0"
   },
