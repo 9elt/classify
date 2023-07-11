@@ -1,12 +1,29 @@
 {
   "name": "style-classify",
+  "type": "commonjs",
   "version": "1.0.0",
   "description": "A React library to create css styles from javascript style objects",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/cjs/index.d.ts",
   "exports": {
-    "import": "./dist/index.js"
+    "import": "./dist/esm/index.js",
+    "require": "./dist/cjs/index.js"
   },
+  "scripts": {
+    "dev": "tsc --watch",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json && echo '{\"type\": \"module\"}'> ./dist/esm/package.json",
+    "build": "rm -rf ./dist/* && npm run build:cjs && npm run build:esm"
+  },
+  "author": "Lorenzo Cicuttin",
+  "license": "MIT",
+  "keywords": [
+    "css-style",
+    "react"
+  ],
+  "readme": "./README.md",
+  "homepage": "https://github.com/9elt/style-classify#readme",
+  "repository": "github:9elt/style-classify",
   "dependencies": {
     "f-hash": "^1.0.0"
   },
@@ -17,9 +34,5 @@
   "peerDependencies": {
     "react": ">=18",
     "react-dom": ">=18"
-  },
-  "scripts": {
-    "dev": "tsc --watch",
-    "build": "tsc"
   }
 }

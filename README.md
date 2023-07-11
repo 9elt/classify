@@ -25,6 +25,8 @@ export default function App() {
 }
 ```
 
+html result
+
 ```html
 <head>
   [...head content]
