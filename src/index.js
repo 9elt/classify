@@ -122,18 +122,21 @@ const createReg = (props, id) => {
       );
     }
     else if (typeof props[k] === "object") {
-      if (k.charAt(0) == "&") {
-        const sub_id = k.replace("&", id);
-        const sub_res = createReg(props[k], sub_id);
-        for (let sub_k in sub_res) {
-          res[sub_k] = sub_res[sub_k];
+      switch (k.charAt(0)) {
+        case "&": {
+          const sub_id = k.replace("&", id);
+          const sub_res = createReg(props[k], sub_id);
+          for (let sub_k in sub_res) {
+            res[sub_k] = sub_res[sub_k];
+          }
+          break;
         }
-      }
-      else if (k.charAt(0) == ":") {
-        res[id + k] = createReg(props[k], "_")["_"];
-      }
-      else if (k.substring(0, 6) == "@media") {
-        res[k] = createReg(props[k], id);
+        case ":": {
+          res[id + k] = createReg(props[k], "_")["_"];
+        }
+        case "@": {
+          res[k] = createReg(props[k], id);
+        }
       }
     }
   }
