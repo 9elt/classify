@@ -1,8 +1,8 @@
 {
   "name": "@9elt/classify",
   "type": "commonjs",
-  "version": "1.0.0",
-  "description": "A lightweight React library to create css styles from javascript style objects, with support for pseudo-classes, media queries and selectors",
+  "version": "2.0.0",
+  "description": "A lightweight React library to create CSS styles from style objects, with support for pseudo-classes, media queries and selectors",
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/index.d.ts",
   "exports": {
@@ -18,15 +18,15 @@
   "author": "Lorenzo Cicuttin",
   "license": "MIT",
   "keywords": [
-    "css-style",
-    "javascript-style",
-    "react"
+    "react",
+    "style",
+    "className"
   ],
   "readme": "./README.md",
   "homepage": "https://github.com/9elt/classify#readme",
   "repository": "github:9elt/classify",
   "dependencies": {
-    "@9elt/hash": "^1.0.0"
+    "@9elt/hash": "^2.1.6"
   },
   "devDependencies": {
     "@types/react": "^18.2.14",

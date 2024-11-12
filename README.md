@@ -1,20 +1,25 @@
 # Classify
 
-A lightweight React library to create css styles from javascript style objects, with support for pseudo-classes, media queries and selectors.
+A lightweight React library to create CSS styles from style objects, with support for pseudo-classes, media queries and selectors.
 
 ## basic example
 
 ```javascript
-import useClassify from "@9elt/classify";
+import { useClassify } from "@9elt/classify";
 
 export default function App() {
-
   const className = useClassify({
     width: 300,
     height: 180,
-    ":hover": { height: 200 },
-    "&>p": { textTransform: "uppercase" },
-    "@media (max-width: 300px)": { width: 200 },
+    ":hover": {
+      height: 200,
+    },
+    "&>p": {
+      textTransform: "uppercase",
+    },
+    "@media (max-width: 300px)": {
+      width: 200,
+    },
   });
 
   return (
